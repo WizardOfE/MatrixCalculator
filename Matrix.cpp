@@ -1,0 +1,197 @@
+#pragma once
+
+#include "Matrix.h"
+
+struct MatrixDimMismatchException : public std::runtime_error {
+  MatrixDimMismatchException(const std::string &msg)
+      : std::runtime_error(msg) {}
+};
+
+Matrix::~Matrix() {
+  for (int i = 0; i < _rows; i++) {
+    delete[] _data[i];
+  }
+  delete[] _data;
+}
+
+Matrix &Matrix::operator+(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to add two matrices with mismatching dimensions");
+  }
+
+  // create new 2d array
+  int **toReturn;
+  toReturn = new int *[_rows];
+
+  for (int i = 0; i < _rows; i++) {
+    toReturn[i] = new int[_cols];
+  }
+
+  // fill the array
+  for (int x = 0; x < _rows; x++) {
+    for (int y = 0; y < _cols; y++) {
+      toReturn[x][y] = _data[x][y] + other._data[x][y];
+    }
+  }
+
+  Matrix *matrixReturn = new Matrix(_rows, _cols, toReturn);
+
+  return *matrixReturn;
+}
+
+Matrix &Matrix::operator+=(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to add two matrices with mismatching dimensions");
+  }
+
+  // fill the array
+  for (int x = 0; x < _rows; x++) {
+    for (int y = 0; y < _cols; y++) {
+      _data[x][y] += other._data[x][y];
+    }
+  }
+
+  return *this;
+}
+
+Matrix &Matrix::operator-(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to subtract two matrices with mismatching dimensions");
+  }
+
+  // create new 2d array
+  int **toReturn;
+  toReturn = new int *[_rows];
+
+  for (int i = 0; i < _rows; i++) {
+    toReturn[i] = new int[_cols];
+  }
+
+  // fill the array
+  for (int x = 0; x < _rows; x++) {
+    for (int y = 0; y < _cols; y++) {
+      toReturn[x][y] = _data[x][y] - other._data[x][y];
+    }
+  }
+
+  Matrix *matrixReturn = new Matrix(_rows, _cols, toReturn);
+
+  return *matrixReturn;
+}
+
+Matrix &Matrix::operator-=(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to subract two matrices with mismatching dimensions");
+  }
+
+  // fill the array
+  for (int x = 0; x < _rows; x++) {
+    for (int y = 0; y < _cols; y++) {
+      _data[x][y] -= other._data[x][y];
+    }
+  }
+
+  return *this;
+}
+
+Matrix &Matrix::operator*(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to multiply two matrices with mismatching dimensions. The "
+        "number of cols in this and the number of rows in other did not "
+        "match.");
+  }
+
+  // create new 2d array
+  int **toReturn;
+  toReturn = new int *[_rows];
+
+  for (int i = 0; i < _rows; i++) {
+    toReturn[i] = new int[other._cols];
+  }
+
+  int tempVal;
+
+  // fill the array
+  for (int m = 0; m < _rows; m++) {
+    for (int n = 0; n < other._cols; n++) {
+      tempVal = 0;
+
+      for (int i = 0; i < _cols; i++) {
+        tempVal += _data[m][i] * other._data[i][n];
+      }
+
+      toReturn[m][n] = tempVal;
+    }
+  }
+
+  Matrix *matrixReturn = new Matrix(_rows, _cols, toReturn);
+
+  return *matrixReturn;
+}
+
+Matrix &Matrix::operator*=(Matrix &other) {
+  // dimension check
+  if (_rows != other._rows || _cols != other._cols) {
+    throw new MatrixDimMismatchException(
+        "Attempted to multiply two matrices with mismatching dimensions. The "
+        "number of cols in this and the number of rows in other did not "
+        "match.");
+  }
+
+  // create new 2d array
+  int **toReturn;
+  toReturn = new int *[_rows];
+
+  for (int i = 0; i < _rows; i++) {
+    toReturn[i] = new int[other._cols];
+  }
+
+  int tempVal;
+
+  // fill the array
+  for (int m = 0; m < _rows; m++) {
+    for (int n = 0; n < other._cols; n++) {
+      tempVal = 0;
+
+      for (int i = 0; i < _cols; i++) {
+        tempVal += _data[m][i] * other._data[i][n];
+      }
+
+      toReturn[m][n] = tempVal;
+    }
+  }
+
+  _data = toReturn;
+
+  return *this;
+}
+
+bool operator==(const Matrix &lhs, const Matrix &rhs) {
+  bool toReturn = true;
+
+  if (lhs._rows != rhs._rows || lhs._cols != rhs._cols) {
+    toReturn = false;
+  }
+
+  for (int x = 0; x < lhs._rows && toReturn; x++) {
+    for (int y = 0; y < lhs._cols && toReturn; x++) {
+      if (lhs._data[x][y] != rhs._data[x][y]) {
+        toReturn = false;
+      }
+    }
+  }
+
+  return toReturn;
+}
+
+std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {}

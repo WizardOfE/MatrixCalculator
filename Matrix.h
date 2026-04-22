@@ -4,11 +4,13 @@
 
 class Matrix {
 private:
-  // TODO declare array - fixed length must be hard coded?
+  int **_data;
+  int _rows;
+  int _cols;
+
 public:
-  // TODO update constructor declaration to match internal state - unsure of
-  // what data should be
-  Matrix(int length, int width, double data);
+  Matrix(int rows, int cols, int **data)
+      : _data(data), _rows(rows), _cols(cols) {};
   ~Matrix();
   Matrix &operator+(Matrix &other);
   Matrix &operator+=(Matrix &other);
