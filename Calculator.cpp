@@ -24,9 +24,12 @@ void Calculator::file_read(std::string filename) {
 
     std::string matrix_name = "";
 
+    // point to a 2d array
+    int **toReturn;
+
     // go through each line of file
     while (getline(MyReadFile, myLine)) {
-        std::cout << myLine << "\n";
+        //std::cout << myLine << "\n";
         switch (matrix_status){
             // if start save name of matrix
             case 0:
@@ -39,10 +42,18 @@ void Calculator::file_read(std::string filename) {
                 column_max = std::stoi(myLine);
                 std::cout << column_max << "\n";
                 break;
-            // get number of rows
+            // get number of rows and create matric
             case 2:
-                row_max = column_max = std::stoi(myLine);
+                row_max = std::stoi(myLine);
                 std::cout << row_max << "\n";
+
+                // create array
+                toReturn = new int *[row_max];
+
+                for (int i = 0; i < row_max; i++) {
+                    toReturn[i] = new int[column_max];
+                }
+
                 break;
             // parse data:
             default:
@@ -53,15 +64,15 @@ void Calculator::file_read(std::string filename) {
                     std::cout << cell << " | "; // Process each cell
                 }
                 row_counter++;
-
-                // if needs to be reset, reset it
-                if (row_max <= row_counter + 3) {
-                    row_counter = 0;
-                }
                 break;
 
         }
         matrix_status++;
+
+        // if needs to be reset, reset it to loop
+        if (row_max <= row_counter + 3) {
+            matrix_status = 0;
+        }
     }
 }
 
