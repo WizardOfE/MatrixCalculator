@@ -6,12 +6,13 @@
 
 class Calculator {
 private:
-  map<std::string, int> _matrices;
+  //std::map<std::string, Matrix> _matrices;
 
   int get_usr_cmd();
   bool file_add_matrix();
   bool file_overwrite_matrix();
   bool file_create_backup();
+  void file_read(std::string filename);
 
 public:
   Calculator(std::string filename);
