@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Matrix.h"
+#include <iomanip>
 
 struct MatrixDimMismatchException : public std::runtime_error {
   MatrixDimMismatchException(const std::string &msg)
@@ -194,4 +195,58 @@ bool operator==(const Matrix &lhs, const Matrix &rhs) {
   return toReturn;
 }
 
-std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {}
+std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {
+  int cellWidth = 0;
+
+  // determine the width of the widest number
+  for (int x = 0; x < matrix._rows; x++) {
+    for (int y = 0; y < matrix._cols; y++) {
+      if (std::to_string(matrix._data[x][y]).length() > cellWidth) {
+        cellWidth = std::to_string(matrix._data[x][y]).length();
+      }
+    }
+  }
+
+  // top tips of brackets
+  os << "_"
+     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << "_" << "\n";
+  os << "| "
+     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << "|" << "\n";
+
+  // meat and potatoes
+  for (int y = 0; y < matrix._cols; y++) {
+    os << "| ";
+
+    for (int x = 0; x < matrix._rows; x++)
+      os << std::setw(cellWidth) << std::internal << matrix._data[x][y] << " ";
+
+    os << "|" << "\n";
+
+    // plus lines
+    if (y != matrix._cols - 1) {
+      os << "| ";
+
+      for (int x = 0; x < matrix._rows; x++) {
+        os << std::string(cellWidth, ' ');
+
+        if (x != matrix._rows - 1) {
+          os << "+";
+        }
+      }
+
+      os << " |" << "\n";
+    }
+  }
+
+  // last two lines
+  os << "| "
+     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << "|" << "\n";
+  os << "_"
+     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << "_" << "\n";
+
+  return os;
+}
