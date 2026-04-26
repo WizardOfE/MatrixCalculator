@@ -87,10 +87,110 @@ Calculator::Calculator(std::string filename) {
 }
 
 void Calculator::Start_Calc() {
+  int op;
+  bool keepGoing = true;
+  std::string lhs;
+  std::string rhs;
+  std::string store;
+  std::array<std::string, 4> user_return;
 
-    Matrix k = _matrices["A"];
+  while (keepGoing) {
 
-    std::cout << k;
+    // parse user input
+    user_return = get_usr_cmd();
+    lhs = user_return[0];
+    op = std::stoi(user_return[1]);
+    rhs = user_return[2];
+    store = user_return[3];
+
+    // TODO write errors, send to default case
+    if (_matrices.count(lhs) == 0) {
+      op = -1;
+      std::cout << lhs << " did not exist";
+
+    } else if (rhs != "" && _matrices.count(rhs) == 0) {
+
+    } else if (store != "" && _matrices.count(store) == 0) {
+    }
+
+    switch (op) {
+    case 0: {
+      // + operator
+      Matrix foo = _matrices[lhs] + _matrices[rhs];
+      _matrices[store] = foo;
+      std::cout << "Added " << lhs << " and " << rhs << " and stored it in "
+                << store << std::endl;
+
+      break;
+    }
+    case 1: {
+      // += opreator
+      _matrices[lhs] += _matrices[rhs];
+      std::cout << "Added " << rhs << " to " << lhs << std::endl;
+
+      break;
+    }
+    case 2: {
+      // - operator
+      Matrix foo = _matrices[lhs] - _matrices[rhs];
+      _matrices[store] = foo;
+      std::cout << "Subtracted " << lhs << " and " << rhs
+                << " and stored it in " << store << std::endl;
+
+      break;
+    }
+    case 3: {
+      // -= operator
+      _matrices[lhs] -= _matrices[rhs];
+      std::cout << "subtracted " << rhs << " from " << lhs << std::endl;
+
+      break;
+    }
+    case 4: {
+      // * operator
+      Matrix foo = _matrices[lhs] * _matrices[rhs];
+      _matrices[store] = foo;
+      std::cout << "Multiplied " << lhs << " and " << rhs
+                << " and stored it in " << store << std::endl;
+
+      break;
+    }
+    case 5: {
+      // *= operator
+      _matrices[lhs] *= _matrices[rhs];
+      std::cout << "Multiplied " << lhs << " by " << rhs << std::endl;
+
+      break;
+    }
+    case 6: {
+      // == operator
+      if (_matrices[lhs] == _matrices[rhs]) {
+        std::cout << "Result was true" << std::endl;
+      } else {
+        std::cout << "Result was false" << std::endl;
+      }
+
+      break;
+    }
+    case 7: {
+      // << operator
+      std::cout << _matrices[lhs];
+
+      break;
+    }
+    case 8: {
+      // exit loop
+
+      break;
+    }
+    default: {
+
+      break;
+    }
+    }
+  }
+
+  // close up shop
 }
 
 Calculator::~Calculator() {
