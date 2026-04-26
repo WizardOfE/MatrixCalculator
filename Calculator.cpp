@@ -13,8 +13,6 @@ void Calculator::file_read(std::string filename) {
     std::ifstream MyReadFile(filename);
     std::string myLine;
 
-    std::cout << filename << "\n";
-
     int matrix_status = 0;
 
     int **toReturn;
@@ -204,4 +202,9 @@ Calculator::~Calculator() {
 
 bool Calculator::file_create_backup(std::string filename) {
 	system(("cp "+filename+" MatrixFileBackup.txt").c_str());
+	return true;
+}
+
+bool Calculator::file_overwrite_matrix() {
+
 }

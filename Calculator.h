@@ -13,7 +13,6 @@ private:
   std::string _filename;
 
   std::array<std::string, 4> get_usr_cmd();
-  bool file_add_matrix();
   bool file_overwrite_matrix();
   bool file_create_backup(std::string filename);
   void file_read(std::string filename);
