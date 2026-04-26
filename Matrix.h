@@ -11,37 +11,9 @@ private:
 public:
   Matrix(int rows, int cols, int **data)
       : _data(data), _rows(rows), _cols(cols) {};
-  Matrix(const Matrix &other) {
-    _rows = other._rows;
-    _cols = other._cols;
+  Matrix(const Matrix &other);
 
-    _data = new int*[_rows];
-    for (int i = 0; i < _rows; i++) {
-      _data[i] = new int[_cols];
-      for (int j = 0; j < _cols; j++) {
-        _data[i][j] = other._data[i][j];
-      }
-    }
-  }
-
-  Matrix& operator=(const Matrix &other) {
-    if (this == &other) return *this;
-
-    for (int i = 0; i < _rows; i++) delete[] _data[i];
-    delete[] _data;
-
-    _rows = other._rows;
-    _cols = other._cols;
-
-    _data = new int*[_rows];
-    for (int i = 0; i < _rows; i++) {
-      _data[i] = new int[_cols];
-      for (int j = 0; j < _cols; j++) {
-        _data[i][j] = other._data[i][j];
-      }
-    }
-    return *this;
-  }
+  Matrix& operator=(const Matrix &other);
 
   Matrix() {
     _rows = 2;

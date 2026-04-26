@@ -9,6 +9,19 @@ struct MatrixDimMismatchException : public std::runtime_error {
       : std::runtime_error(msg) {}
 };
 
+Matrix::Matrix(const Matrix &other) {
+  _rows = other._rows;
+  _cols = other._cols;
+
+  _data = new int*[_rows];
+  for (int i = 0; i < _rows; i++) {
+    _data[i] = new int[_cols];
+    for (int j = 0; j < _cols; j++) {
+      _data[i][j] = other._data[i][j];
+    }
+  }
+}
+
 Matrix::~Matrix() {
   for (int i = 0; i < _rows; i++) {
     delete[] _data[i];
@@ -175,6 +188,25 @@ Matrix &Matrix::operator*=(Matrix &other) {
 
   _data = toReturn;
 
+  return *this;
+}
+
+Matrix& Matrix::operator=(const Matrix &other) {
+  if (this == &other) return *this;
+
+  for (int i = 0; i < _rows; i++) delete[] _data[i];
+  delete[] _data;
+
+  _rows = other._rows;
+  _cols = other._cols;
+
+  _data = new int*[_rows];
+  for (int i = 0; i < _rows; i++) {
+    _data[i] = new int[_cols];
+    for (int j = 0; j < _cols; j++) {
+      _data[i][j] = other._data[i][j];
+    }
+  }
   return *this;
 }
 
