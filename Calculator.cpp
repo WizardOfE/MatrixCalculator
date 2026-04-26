@@ -74,11 +74,11 @@ void Calculator::file_read(std::string filename) {
         //
         // // if needs to be reset, reset it to loop
         if (row_max >= row_counter + 3) {
-             //std::cout << "myLine " << """\n";
-             //std::cout << "myLine " <<  myLine <<"\n";
-            Matrix newMatrix(row_max, row_max, toReturn);
-            _matrices[matrix_name] = newMatrix;
-             //;
+            // std::cout << "myLine " << """\n";
+            // std::cout << "myLine " <<  myLine <<"\n"
+
+            _matrices[matrix_name] = Matrix(row_max, column_max, toReturn); // commenting this stops early
+            //;
              matrix_status = 0;
         //     column_counter = 0;
              row_counter = 0;

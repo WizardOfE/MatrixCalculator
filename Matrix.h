@@ -11,6 +11,7 @@ private:
 public:
   Matrix(int rows, int cols, int **data)
       : _data(data), _rows(rows), _cols(cols) {};
+  Matrix() : _data(nullptr), _rows(0), _cols(0) {}
   ~Matrix();
   Matrix &operator+(Matrix &other);
   Matrix &operator+=(Matrix &other);

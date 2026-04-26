@@ -3,6 +3,7 @@
 #include "Matrix.h"
 #include <iomanip>
 
+
 struct MatrixDimMismatchException : public std::runtime_error {
   MatrixDimMismatchException(const std::string &msg)
       : std::runtime_error(msg) {}
