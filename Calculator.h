@@ -6,7 +6,7 @@
 
 class Calculator {
 private:
-  // std::map<std::string, Matrix> _matrices;
+  std::map<std::string, Matrix> _matrices;
 
   std::array<std::string, 4> get_usr_cmd();
   bool file_add_matrix();

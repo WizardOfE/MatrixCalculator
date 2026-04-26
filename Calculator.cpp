@@ -4,6 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <typeinfo>
 
 
 
@@ -28,7 +29,8 @@ void Calculator::file_read(std::string filename) {
     int **toReturn;
 
     // go through each line of file
-    while (getline(MyReadFile, myLine)) {
+
+     while (getline(MyReadFile, myLine)) {
         //std::cout<<myLine<<"\n";
         switch (matrix_status){
             // if start save name of matrix
@@ -65,25 +67,28 @@ void Calculator::file_read(std::string filename) {
                     toReturn[row_counter][column_counter] = std::stoi(cell);
                     column_counter++;
                 }
+                std::cout<<"\n";
                 row_counter++;
                 break;
 
         }
-        // std::cout << matrix_status << "\n";
+         //std::cout << matrix_status << " "<< row_max << "\n";
          matrix_status++;
         //
         // // if needs to be reset, reset it to loop
-        if (row_max >= row_counter + 3) {
+        if (matrix_status >= row_max + 3 && matrix_status > 3) {
             // std::cout << "myLine " << """\n";
             // std::cout << "myLine " <<  myLine <<"\n"
 
-            _matrices[matrix_name] = Matrix(row_max, column_max, toReturn); // commenting this stops early
-            //;
-             matrix_status = 0;
-        //     column_counter = 0;
-             row_counter = 0;
+            _matrices.emplace(matrix_name ,Matrix(row_max, column_max, toReturn)); // commenting this stops early
+
+
+            matrix_status = 0;
+            //column_counter = 0;
+            row_counter = 0;
         }
     }
+
 }
 
 Calculator::Calculator(std::string filename) {
@@ -92,6 +97,9 @@ Calculator::Calculator(std::string filename) {
 
 void Calculator::Start_Calc() {
 
+    Matrix k = _matrices["A"];
+
+    std::cout << k;
 }
 
 Calculator::~Calculator() {
