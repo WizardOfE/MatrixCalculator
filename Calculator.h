@@ -1,15 +1,16 @@
 #pragma once
 
 #include "Matrix.h"
-#include <map>
-#include <string>
-#include <iostream>
 #include <fstream>
+#include <iostream>
+#include <map>
 #include <sstream>
+#include <string>
 
 class Calculator {
 private:
   std::map<std::string, Matrix> _matrices;
+  std::string _filename;
 
   std::array<std::string, 4> get_usr_cmd();
   bool file_add_matrix();
