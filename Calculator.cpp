@@ -5,6 +5,8 @@
 #include <fstream>
 #include <sstream>
 #include <array>
+#include <filesystem>
+#include <iostream>
 
 
 void Calculator::file_read(std::string filename) {
@@ -200,3 +202,6 @@ Calculator::~Calculator() {
 
 }
 
+bool Calculator::file_create_backup(std::string filename) {
+	system(("cp "+filename+" MatrixFileBackup.txt").c_str());
+}
