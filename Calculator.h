@@ -6,9 +6,9 @@
 
 class Calculator {
 private:
-  //std::map<std::string, Matrix> _matrices;
+  // std::map<std::string, Matrix> _matrices;
 
-  int get_usr_cmd();
+  std::array<std::string, 4> get_usr_cmd();
   bool file_add_matrix();
   bool file_overwrite_matrix();
   bool file_create_backup();
