@@ -4,7 +4,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
+#include <array>
 
 
 void Calculator::file_read(std::string filename) {
@@ -69,7 +69,7 @@ void Calculator::file_read(std::string filename) {
             }
 
             Matrix o(row_max, column_max, toReturn);
-            std::cout << o << " | "<<name << "\n";
+            //std::cout << o << " | "<<name << "\n";
 
             _matrices[name] = o;
 
@@ -83,11 +83,16 @@ void Calculator::file_read(std::string filename) {
 }
 
 Calculator::Calculator(std::string filename) {
-     file_read(filename);
+	file_read(filename);
+
+	for (auto const& [key, value] : _matrices) {
+		std::cout << key << " : " << value << std::endl;
+	}
+
 }
 
 void Calculator::Start_Calc() {
-  int op;
+  /*int op;
   bool keepGoing = true;
   std::string lhs;
   std::string rhs;
@@ -190,7 +195,7 @@ void Calculator::Start_Calc() {
     }
   }
 
-  // close up shop
+  // close up shop*/
 }
 
 Calculator::~Calculator() {

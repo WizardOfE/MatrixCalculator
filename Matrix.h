@@ -11,7 +11,7 @@ private:
 public:
   Matrix(int rows, int cols, int **data)
       : _data(data), _rows(rows), _cols(cols) {};
-  Matrix(Matrix &matrix)
+  Matrix( const Matrix &matrix)
       : _data(matrix._data), _rows(matrix._rows), _cols(matrix._cols) {};
   Matrix() {
     _rows = 2;
