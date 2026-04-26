@@ -84,11 +84,6 @@ void Calculator::file_read(std::string filename) {
 
 Calculator::Calculator(std::string filename) {
 	file_read(filename);
-
-	for (auto const& [key, value] : _matrices) {
-		std::cout << key << " : " << value << std::endl;
-	}
-
 }
 
 void Calculator::Start_Calc() {
@@ -199,6 +194,9 @@ void Calculator::Start_Calc() {
 }
 
 Calculator::~Calculator() {
+	for (auto [key, value] : _matrices) {
+		//delete value;
+	}
 
 }
 
