@@ -4,7 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <typeinfo>
 
 
 
@@ -12,42 +11,32 @@ void Calculator::file_read(std::string filename) {
     std::ifstream MyReadFile(filename);
     std::string myLine;
 
-
     std::cout << filename << "\n";
-    int column_counter = 0;
-    int row_counter = 0;
 
+    int matrix_status = 0;
+
+    int **toReturn;
+
+    //get vars
+    std::string name = "";
     int column_max = 0;
     int row_max = 0;
 
-    // keep count of where we are att on each section of matrix;
-    int matrix_status = 0;
+    int column_counter = 0;
+    int row_counter = 0;
 
-    std::string matrix_name = "";
-
-    // point to a 2d array
-    int **toReturn;
-
-    // go through each line of file
-
-     while (getline(MyReadFile, myLine)) {
-        //std::cout<<myLine<<"\n";
-        switch (matrix_status){
-            // if start save name of matrix
-            case 0:
-                matrix_name = myLine;
-                std::cout << matrix_name << " \n";
+    while (getline(MyReadFile, myLine)) {
+        //std::cout << myLine << "\n";
+        switch (matrix_status) {
+            case 0 :
+                name = myLine;
+                row_max = 0;
                 break;
-            // get number of columns
             case 1:
                 column_max = std::stoi(myLine);
-                std::cout << column_max << " "<< matrix_status <<"\n";
                 break;
-            // get number of rows and create matric
             case 2:
                 row_max = std::stoi(myLine);
-                std::cout << row_max << " "<< matrix_status << "\n";
-
                 // create array
                 toReturn = new int *[row_max];
 
@@ -56,35 +45,37 @@ void Calculator::file_read(std::string filename) {
                 }
 
                 break;
-            // parse data:
             default:
                 std::istringstream ss(myLine);
                 std::string cell;
 
                 column_counter = 0;
                 while (std::getline(ss, cell, ',')) {
-                    std::cout << cell << " | "; // Process each cell
                     toReturn[row_counter][column_counter] = std::stoi(cell);
+                    //std::cout << toReturn[row_counter][column_counter] << " | "; // Process each cell
                     column_counter++;
                 }
-                std::cout<<"\n";
                 row_counter++;
-                break;
-
         }
-         //std::cout << matrix_status << " "<< row_max << "\n";
-         matrix_status++;
-        //
-        // // if needs to be reset, reset it to loop
-        if (matrix_status >= row_max + 3 && matrix_status > 3) {
-            // std::cout << "myLine " << """\n";
-            // std::cout << "myLine " <<  myLine <<"\n"
 
-            _matrices.emplace(matrix_name ,Matrix(row_max, column_max, toReturn)); // commenting this stops early
+        matrix_status++;
 
+        //std::cout << matrix_status << " | " <<(matrix_status > row_max + 2 && matrix_status > 2)<< "\n";
+        if(matrix_status > row_max + 2 && matrix_status > 2) {
+            for (size_t x = 0; x < row_max; x++) {
+                for (size_t y = 0; y < column_max; y++) {
+                    //std::cout << toReturn[x][y] << " " << "("<<x <<"," << y <<") \n";
+                }
+            }
 
+            Matrix o(row_max, column_max, toReturn);
+            std::cout << o << " | "<<name << "\n";
+
+            _matrices[name] = o;
+
+            //td::cout << "sd" << "\n";
             matrix_status = 0;
-            //column_counter = 0;
+            column_counter = 0;
             row_counter = 0;
         }
     }
