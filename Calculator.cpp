@@ -1,96 +1,93 @@
-#include <string>
-#include "Matrix.h"
 #include "Calculator.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include "Matrix.h"
 #include <array>
 #include <filesystem>
+#include <fstream>
 #include <iostream>
-
+#include <sstream>
+#include <string>
 
 void Calculator::file_read() {
-    std::ifstream MyReadFile(_filename);
-    std::string myLine;
+  std::ifstream MyReadFile(_filename);
+  std::string myLine;
 
-    int matrix_status = 0;
+  int matrix_status = 0;
 
-    int **toReturn;
+  int **toReturn;
 
-    //get vars
-    std::string name = "";
-    int column_max = 0;
-    int row_max = 0;
+  // get vars
+  std::string name = "";
+  int column_max = 0;
+  int row_max = 0;
 
-    int column_counter = 0;
-    int row_counter = 0;
+  int column_counter = 0;
+  int row_counter = 0;
 
-    while (getline(MyReadFile, myLine)) {
-        //std::cout << myLine << "\n";
-        switch (matrix_status) {
-        	// get name/variable of matrix
-            case 0 :
-                name = myLine;
-                row_max = 0;
-                break;
-        	// get column count
-            case 1:
-                column_max = std::stoi(myLine);
-                break;
-        	// get row count
-            case 2:
-                row_max = std::stoi(myLine);
-                // set up array
-                toReturn = new int *[row_max];
+  while (getline(MyReadFile, myLine)) {
+    // std::cout << myLine << "\n";
+    switch (matrix_status) {
+      // get name/variable of matrix
+    case 0:
+      name = myLine;
+      row_max = 0;
+      break;
+      // get column count
+    case 1:
+      column_max = std::stoi(myLine);
+      break;
+      // get row count
+    case 2:
+      row_max = std::stoi(myLine);
+      // set up array
+      toReturn = new int *[row_max];
 
-                for (int i = 0; i < row_max; i++) {
-                    toReturn[i] = new int[column_max];
-                }
+      for (int i = 0; i < row_max; i++) {
+        toReturn[i] = new int[column_max];
+      }
 
-                break;
-            default:
-                std::istringstream ss(myLine);
-                std::string cell;
+      break;
+    default:
+      std::istringstream ss(myLine);
+      std::string cell;
 
-                column_counter = 0;
-                while (std::getline(ss, cell, ',')) {
-                    toReturn[row_counter][column_counter] = std::stoi(cell);
-                    //std::cout << toReturn[row_counter][column_counter] << " | "; // Process each cell
-                    column_counter++;
-                }
-                row_counter++;
-        }
-
-        matrix_status++;
-
-        //std::cout << matrix_status << " | " <<(matrix_status > row_max + 2 && matrix_status > 2)<< "\n";
-        if(matrix_status > row_max + 2 && matrix_status > 2) {
-            for (size_t x = 0; x < row_max; x++) {
-                for (size_t y = 0; y < column_max; y++) {
-                    //std::cout << toReturn[x][y] << " " << "("<<x <<"," << y <<") \n";
-                }
-            }
-
-            Matrix o(row_max, column_max, toReturn);
-            //std::cout << o << " | "<<name << "\n";
-
-            _matrices[name] = o;
-
-            //td::cout << "sd" << "\n";
-            matrix_status = 0;
-            column_counter = 0;
-            row_counter = 0;
-        }
+      column_counter = 0;
+      while (std::getline(ss, cell, ',')) {
+        toReturn[row_counter][column_counter] = std::stoi(cell);
+        // std::cout << toReturn[row_counter][column_counter] << " | "; //
+        // Process each cell
+        column_counter++;
+      }
+      row_counter++;
     }
 
+    matrix_status++;
+
+    // std::cout << matrix_status << " | " <<(matrix_status > row_max + 2 &&
+    // matrix_status > 2)<< "\n";
+    if (matrix_status > row_max + 2 && matrix_status > 2) {
+      for (size_t x = 0; x < row_max; x++) {
+        for (size_t y = 0; y < column_max; y++) {
+          // std::cout << toReturn[x][y] << " " << "("<<x <<"," << y <<") \n";
+        }
+      }
+
+      Matrix o(row_max, column_max, toReturn);
+      // std::cout << o << " | "<<name << "\n";
+
+      _matrices[name] = o;
+
+      // td::cout << "sd" << "\n";
+      matrix_status = 0;
+      column_counter = 0;
+      row_counter = 0;
+    }
+  }
 }
 
-Calculator::Calculator(std::string filename) {
-	file_read();
-}
+Calculator::Calculator(std::string filename) { file_read(); }
 
 void Calculator::Start_Calc() {
-  /*int op;
+  int op;
   bool keepGoing = true;
   std::string lhs;
   std::string rhs;
@@ -109,11 +106,13 @@ void Calculator::Start_Calc() {
     // TODO write errors, send to default case
     if (_matrices.count(lhs) == 0) {
       op = -1;
-      std::cout << lhs << " did not exist";
+      std::cout << lhs << " did not exist" << std::endl;
 
     } else if (rhs != "" && _matrices.count(rhs) == 0) {
+      std::cout << rhs << " did not exist" << std::endl;
 
     } else if (store != "" && _matrices.count(store) == 0) {
+      std::cout << store << " did not exist" << std::endl;
     }
 
     switch (op) {
@@ -183,10 +182,13 @@ void Calculator::Start_Calc() {
     }
     case 8: {
       // exit loop
+      std::cout << "Goodbye!" << std::endl;
+      keepGoing = false;
 
       break;
     }
     default: {
+      std::cout << "Incorrect usage, try again." << std::endl;
 
       break;
     }
@@ -194,18 +196,18 @@ void Calculator::Start_Calc() {
   }
 
   // close up shop*/
+  file_overwrite_matrix();
 }
 
 Calculator::~Calculator() {
-	for (auto [key, value] : _matrices) {
-		//delete value;
-	}
-
+  for (auto [key, value] : _matrices) {
+    // delete value;
+  }
 }
 
 bool Calculator::file_create_backup() {
-	system(("cp "+_filename+" MatrixFileBackup.txt").c_str());
-	return true;
+  system(("cp " + _filename + " MatrixFileBackup.txt").c_str());
+  return true;
 }
 
 /**
@@ -213,40 +215,37 @@ bool Calculator::file_create_backup() {
  * @return if successful
  */
 bool Calculator::file_overwrite_matrix() {
-	// open and clear the file
-	std::ofstream outFile("_filename.txt");
+  // open and clear the file
+  std::ofstream outFile("_filename.txt");
 
-	// if file is open
-	if (outFile.is_open()) {
-		for (auto [key, value] : _matrices) {
-			auto o = _matrices[key];
-			int colCount = o.getCols();
-			int rowCount = o.getRows();
+  // if file is open
+  if (outFile.is_open()) {
+    for (auto [key, value] : _matrices) {
+      auto o = _matrices[key];
+      int colCount = o.getCols();
+      int rowCount = o.getRows();
 
-			outFile << key << "\n";
-			outFile << colCount << "\n";
-			outFile << rowCount << "\n";
+      outFile << key << "\n";
+      outFile << colCount << "\n";
+      outFile << rowCount << "\n";
 
-			int** array = *o.getMatrixArray();
-			for (int x = 0; x < rowCount; x++) {
-				std::string rowText = "";
-				for (int y = 0; y < colCount; y++) {
-					rowText += std::to_string(array[rowCount][colCount]) + ",";
-				}
+      int **array = *o.getMatrixArray();
+      for (int x = 0; x < rowCount; x++) {
+        std::string rowText = "";
+        for (int y = 0; y < colCount; y++) {
+          rowText += std::to_string(array[rowCount][colCount]) + ",";
+        }
 
-				rowText.pop_back();
-				outFile << rowText << "\n";
-			}
-
-		}
-		// close the file
-		outFile.close();
-	}
-	else
-	{
-		// error as file was not open
-		std::cerr << "Error opening the file!";
-		return false;
-	}
-	return true;
+        rowText.pop_back();
+        outFile << rowText << "\n";
+      }
+    }
+    // close the file
+    outFile.close();
+  } else {
+    // error as file was not open
+    std::cerr << "Error opening the file!";
+    return false;
+  }
+  return true;
 }
