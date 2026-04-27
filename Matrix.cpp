@@ -9,6 +9,10 @@ struct MatrixDimMismatchException : public std::runtime_error {
       : std::runtime_error(msg) {}
 };
 
+/**
+ * Copy constructor
+ * @param other Matrix to compare to
+ */
 Matrix::Matrix(const Matrix &other) {
   _rows = other._rows;
   _cols = other._cols;
@@ -22,6 +26,9 @@ Matrix::Matrix(const Matrix &other) {
   }
 }
 
+/**
+ * Matrix Destructor
+ */
 Matrix::~Matrix() {
   for (int i = 0; i < _rows; i++) {
     delete[] _data[i];
@@ -189,6 +196,30 @@ Matrix &Matrix::operator*=(Matrix &other) {
   _data = toReturn;
 
   return *this;
+}
+
+/**
+ * get rows
+ * @return integer of rows
+ */
+int Matrix::getRows() {
+  return _rows;
+}
+
+/**
+ * Get columns
+ * @return integer of matrix columns
+ */
+int Matrix::getCols() {
+  return _cols;
+}
+
+/**
+ * get the internal array
+ * @return matrix array
+ */
+int*** Matrix::getMatrixArray() {
+  return &_data;
 }
 
 Matrix& Matrix::operator=(const Matrix &other) {

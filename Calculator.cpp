@@ -9,8 +9,8 @@
 #include <iostream>
 
 
-void Calculator::file_read(std::string filename) {
-    std::ifstream MyReadFile(filename);
+void Calculator::file_read() {
+    std::ifstream MyReadFile(_filename);
     std::string myLine;
 
     int matrix_status = 0;
@@ -28,16 +28,19 @@ void Calculator::file_read(std::string filename) {
     while (getline(MyReadFile, myLine)) {
         //std::cout << myLine << "\n";
         switch (matrix_status) {
+        	// get name/variable of matrix
             case 0 :
                 name = myLine;
                 row_max = 0;
                 break;
+        	// get column count
             case 1:
                 column_max = std::stoi(myLine);
                 break;
+        	// get row count
             case 2:
                 row_max = std::stoi(myLine);
-                // create array
+                // set up array
                 toReturn = new int *[row_max];
 
                 for (int i = 0; i < row_max; i++) {
@@ -83,7 +86,7 @@ void Calculator::file_read(std::string filename) {
 }
 
 Calculator::Calculator(std::string filename) {
-	file_read(filename);
+	file_read();
 }
 
 void Calculator::Start_Calc() {
@@ -200,11 +203,50 @@ Calculator::~Calculator() {
 
 }
 
-bool Calculator::file_create_backup(std::string filename) {
-	system(("cp "+filename+" MatrixFileBackup.txt").c_str());
+bool Calculator::file_create_backup() {
+	system(("cp "+_filename+" MatrixFileBackup.txt").c_str());
 	return true;
 }
 
+/**
+ * update given matrix file with new data
+ * @return if successful
+ */
 bool Calculator::file_overwrite_matrix() {
+	// open and clear the file
+	std::ofstream outFile("_filename.txt");
 
+	// if file is open
+	if (outFile.is_open()) {
+		for (auto [key, value] : _matrices) {
+			auto o = _matrices[key];
+			int colCount = o.getCols();
+			int rowCount = o.getRows();
+
+			outFile << key << "\n";
+			outFile << colCount << "\n";
+			outFile << rowCount << "\n";
+
+			int** array = *o.getMatrixArray();
+			for (int x = 0; x < rowCount; x++) {
+				std::string rowText = "";
+				for (int y = 0; y < colCount; y++) {
+					rowText += std::to_string(array[rowCount][colCount]) + ",";
+				}
+
+				rowText.pop_back();
+				outFile << rowText << "\n";
+			}
+
+		}
+		// close the file
+		outFile.close();
+	}
+	else
+	{
+		// error as file was not open
+		std::cerr << "Error opening the file!";
+		return false;
+	}
+	return true;
 }

@@ -31,9 +31,25 @@ public:
   Matrix &operator*(Matrix &other);
   Matrix &operator*=(Matrix &other);
 
-  int getRows() { return _rows; }
-  int gowCol() { return _cols; }
+  /**
+   * get rows
+   * @return integer of rows
+   */
+  int getRows();
+
+  /**
+   * Get columns
+   * @return integer of matrix columns
+   */
+  int getCols();
+
+  /**
+   * get the internal array
+   * @return matrix array
+   */
+  int*** getMatrixArray();
 
   friend bool operator==(const Matrix &lhs, const Matrix &rhs);
   friend std::ostream &operator<<(std::ostream &os, const Matrix &matrix);
+
 };
