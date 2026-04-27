@@ -3,7 +3,6 @@
 #include "Matrix.h"
 #include <iomanip>
 
-
 struct MatrixDimMismatchException : public std::runtime_error {
   MatrixDimMismatchException(const std::string &msg)
       : std::runtime_error(msg) {}
@@ -17,7 +16,7 @@ Matrix::Matrix(const Matrix &other) {
   _rows = other._rows;
   _cols = other._cols;
 
-  _data = new int*[_rows];
+  _data = new int *[_rows];
   for (int i = 0; i < _rows; i++) {
     _data[i] = new int[_cols];
     for (int j = 0; j < _cols; j++) {
@@ -126,11 +125,11 @@ Matrix &Matrix::operator-=(Matrix &other) {
 
 Matrix &Matrix::operator*(Matrix &other) {
   // dimension check
-  if (_rows != other._rows || _cols != other._cols) {
+  if (_cols != other._rows || _rows != other._cols) {
     throw new MatrixDimMismatchException(
         "Attempted to multiply two matrices with mismatching dimensions. The "
         "number of cols in this and the number of rows in other did not "
-        "match.");
+        "match.(or vice versa)");
   }
 
   // create new 2d array
@@ -144,26 +143,26 @@ Matrix &Matrix::operator*(Matrix &other) {
   int tempVal;
 
   // fill the array
-  for (int m = 0; m < _rows; m++) {
-    for (int n = 0; n < other._cols; n++) {
+  for (int this_rows = 0; this_rows < _rows; this_rows++) {
+    for (int other_cols = 0; other_cols < other._cols; other_cols++) {
       tempVal = 0;
 
       for (int i = 0; i < _cols; i++) {
-        tempVal += _data[m][i] * other._data[i][n];
+        tempVal += _data[this_rows][i] * other._data[i][other_cols];
       }
 
-      toReturn[m][n] = tempVal;
+      toReturn[this_rows][other_cols] = tempVal;
     }
   }
 
-  Matrix *matrixReturn = new Matrix(_rows, _cols, toReturn);
+  Matrix *matrixReturn = new Matrix(_rows, other._cols, toReturn);
 
   return *matrixReturn;
 }
 
 Matrix &Matrix::operator*=(Matrix &other) {
   // dimension check
-  if (_rows != other._rows || _cols != other._cols) {
+  if (_cols != other._rows || _rows != other._cols) {
     throw new MatrixDimMismatchException(
         "Attempted to multiply two matrices with mismatching dimensions. The "
         "number of cols in this and the number of rows in other did not "
@@ -181,18 +180,19 @@ Matrix &Matrix::operator*=(Matrix &other) {
   int tempVal;
 
   // fill the array
-  for (int m = 0; m < _rows; m++) {
-    for (int n = 0; n < other._cols; n++) {
+  for (int this_rows = 0; this_rows < _rows; this_rows++) {
+    for (int other_cols = 0; other_cols < other._cols; other_cols++) {
       tempVal = 0;
 
       for (int i = 0; i < _cols; i++) {
-        tempVal += _data[m][i] * other._data[i][n];
+        tempVal += _data[this_rows][i] * other._data[i][other_cols];
       }
 
-      toReturn[m][n] = tempVal;
+      toReturn[this_rows][other_cols] = tempVal;
     }
   }
 
+  _cols = other._cols;
   _data = toReturn;
 
   return *this;
@@ -202,36 +202,32 @@ Matrix &Matrix::operator*=(Matrix &other) {
  * get rows
  * @return integer of rows
  */
-int Matrix::getRows() {
-  return _rows;
-}
+int Matrix::getRows() { return _rows; }
 
 /**
  * Get columns
  * @return integer of matrix columns
  */
-int Matrix::getCols() {
-  return _cols;
-}
+int Matrix::getCols() { return _cols; }
 
 /**
  * get the internal array
  * @return matrix array
  */
-int*** Matrix::getMatrixArray() {
-  return &_data;
-}
+int ***Matrix::getMatrixArray() { return &_data; }
 
-Matrix& Matrix::operator=(const Matrix &other) {
-  if (this == &other) return *this;
+Matrix &Matrix::operator=(const Matrix &other) {
+  if (this == &other)
+    return *this;
 
-  for (int i = 0; i < _rows; i++) delete[] _data[i];
+  for (int i = 0; i < _rows; i++)
+    delete[] _data[i];
   delete[] _data;
 
   _rows = other._rows;
   _cols = other._cols;
 
-  _data = new int*[_rows];
+  _data = new int *[_rows];
   for (int i = 0; i < _rows; i++) {
     _data[i] = new int[_cols];
     for (int j = 0; j < _cols; j++) {
@@ -273,29 +269,29 @@ std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {
 
   // top tips of brackets
   os << "_"
-     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << std::string(((cellWidth * matrix._cols) + (matrix._cols + 1)), ' ')
      << "_" << "\n";
   os << "| "
-     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << std::string(((cellWidth * matrix._cols) + (matrix._cols - 0)), ' ')
      << "|" << "\n";
 
   // meat and potatoes
-  for (int y = 0; y < matrix._cols; y++) {
+  for (int y = 0; y < matrix._rows; y++) {
     os << "| ";
 
-    for (int x = 0; x < matrix._rows; x++)
-      os << std::setw(cellWidth) << std::internal << matrix._data[x][y] << " ";
+    for (int x = 0; x < matrix._cols; x++)
+      os << std::setw(cellWidth) << std::internal << matrix._data[y][x] << " ";
 
     os << "|" << "\n";
 
     // plus lines
-    if (y != matrix._cols - 1) {
+    if (y != matrix._rows - 1) {
       os << "| ";
 
-      for (int x = 0; x < matrix._rows; x++) {
+      for (int x = 0; x < matrix._cols; x++) {
         os << std::string(cellWidth, ' ');
 
-        if (x != matrix._rows - 1) {
+        if (x != matrix._cols - 1) {
           os << "+";
         }
       }
@@ -306,10 +302,10 @@ std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {
 
   // last two lines
   os << "| "
-     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << std::string(((cellWidth * matrix._cols) + (matrix._cols - 0)), ' ')
      << "|" << "\n";
   os << "_"
-     << std::string(((cellWidth * matrix._rows) + (matrix._rows - 1)), ' ')
+     << std::string(((cellWidth * matrix._cols) + (matrix._cols + 1)), ' ')
      << "_" << "\n";
 
   return os;

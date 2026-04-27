@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Calculator.h"
 #include "Matrix.h"
 #include <array>
@@ -16,7 +18,9 @@ std::unordered_map<std::string, std::string> Op_Map = {
 void Calculator::file_read() {
   std::ifstream MyReadFile(_filename);
   std::string myLine;
-
+  if (!MyReadFile.is_open()) {
+    std::cout << "file is not open. filename: " << _filename << std::endl;
+  }
   int matrix_status = 0;
 
   int **toReturn;
@@ -90,7 +94,9 @@ void Calculator::file_read() {
   }
 }
 
-Calculator::Calculator(std::string filename) { file_read(); }
+Calculator::Calculator(std::string filename) : _filename(filename) {
+  file_read();
+}
 
 void Calculator::Start_Calc() {
   int op;
@@ -99,6 +105,8 @@ void Calculator::Start_Calc() {
   std::string rhs;
   std::string store;
   std::array<std::string, 4> user_return;
+
+  file_create_backup();
 
   while (keepGoing) {
 
@@ -109,15 +117,17 @@ void Calculator::Start_Calc() {
     rhs = user_return[2];
     store = user_return[3];
 
-    // TODO write errors, send to default case
-    if (_matrices.count(lhs) == 0) {
+    // write errors, send to default case
+    if (op != 8 && _matrices.count(lhs) == 0) {
       op = -1;
       std::cout << lhs << " did not exist" << std::endl;
 
     } else if (rhs != "" && _matrices.count(rhs) == 0) {
+      op = -1;
       std::cout << rhs << " did not exist" << std::endl;
 
     } else if (store != "" && _matrices.count(store) == 0) {
+      op = -1;
       std::cout << store << " did not exist" << std::endl;
     }
 
@@ -222,7 +232,7 @@ bool Calculator::file_create_backup() {
  */
 bool Calculator::file_overwrite_matrix() {
   // open and clear the file
-  std::ofstream outFile("_filename.txt");
+  std::ofstream outFile("MatrixFile.txt");
 
   // if file is open
   if (outFile.is_open()) {
@@ -239,7 +249,7 @@ bool Calculator::file_overwrite_matrix() {
       for (int x = 0; x < rowCount; x++) {
         std::string rowText = "";
         for (int y = 0; y < colCount; y++) {
-          rowText += std::to_string(array[rowCount][colCount]) + ",";
+          rowText += std::to_string(array[x][y]) + ",";
         }
 
         rowText.pop_back();
@@ -270,7 +280,10 @@ std::array<std::string, 4> Calculator::get_usr_cmd() {
 
   split_input >> lhs;
   if (split_input.fail()) {
-    return std::array<std::string, 4>{lhs, "-1", rhs, store};
+    return std::array<std::string, 4>{"wowww", "-1", rhs, store};
+  }
+  if (lhs == "exit") {
+    return std::array<std::string, 4>{lhs, "8", rhs, store};
   }
   split_input >> op;
   if (split_input.fail()) {
