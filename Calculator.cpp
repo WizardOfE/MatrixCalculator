@@ -1,11 +1,17 @@
 #include "Calculator.h"
 #include "Matrix.h"
 #include <array>
+#include <cstdio>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <unordered_map>
+
+std::unordered_map<std::string, std::string> Op_Map = {
+    {"+", "0"}, {"+=", "1"}, {"-", "2"},  {"-=", "3"},
+    {"*", "4"}, {"*=", "5"}, {"==", "6"}, {"<<", "7"}};
 
 void Calculator::file_read() {
   std::ifstream MyReadFile(_filename);
@@ -248,4 +254,53 @@ bool Calculator::file_overwrite_matrix() {
     return false;
   }
   return true;
+}
+
+std::array<std::string, 4> Calculator::get_usr_cmd() {
+  std::string user_input = "";
+  std::cout << "Enter command: " << std::endl;
+  getline(std::cin, user_input);
+  std::cout << std::endl;
+  std::stringstream split_input(user_input);
+
+  std::string lhs = "";
+  std::string op = "";
+  std::string rhs = "";
+  std::string store = "";
+
+  split_input >> lhs;
+  if (split_input.fail()) {
+    return std::array<std::string, 4>{lhs, "-1", rhs, store};
+  }
+  split_input >> op;
+  if (split_input.fail()) {
+    return std::array<std::string, 4>{lhs, "-1", rhs, store};
+  }
+
+  if (Op_Map.count(op) == 0) {
+    op = "-1";
+  } else {
+    op = Op_Map[op];
+  }
+
+  if (op != "7" && op != "-1") {
+    split_input >> rhs;
+    if (split_input.fail()) {
+      return std::array<std::string, 4>{lhs, "-1", rhs, store};
+    }
+  }
+
+  if (op == "0" || op == "2" || op == "4") {
+    // double >> to skip the = op
+    split_input >> store;
+    if (split_input.fail()) {
+      return std::array<std::string, 4>{lhs, "-1", rhs, store};
+    }
+    split_input >> store;
+    if (split_input.fail()) {
+      return std::array<std::string, 4>{lhs, "-1", rhs, store};
+    }
+  }
+
+  return std::array<std::string, 4>{lhs, op, rhs, store};
 }
