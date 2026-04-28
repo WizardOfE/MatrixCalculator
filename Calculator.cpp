@@ -4,7 +4,6 @@
 #include "Matrix.h"
 #include <array>
 #include <cstdio>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -15,6 +14,9 @@ std::unordered_map<std::string, std::string> Op_Map = {
     {"+", "0"}, {"+=", "1"}, {"-", "2"},  {"-=", "3"},
     {"*", "4"}, {"*=", "5"}, {"==", "6"}, {"<<", "7"}};
 
+/**
+  * read the file that was given
+  */
 void Calculator::file_read() {
   std::ifstream MyReadFile(_filename);
   std::string myLine;
@@ -94,10 +96,17 @@ void Calculator::file_read() {
   }
 }
 
+/**
+ * create a calculator object
+ * @param filename file name to use
+ */
 Calculator::Calculator(std::string filename) : _filename(filename) {
   file_read();
 }
 
+/**
+ * Begin main code for calculations
+ */
 void Calculator::Start_Calc() {
   int op;
   bool keepGoing = true;
@@ -215,14 +224,31 @@ void Calculator::Start_Calc() {
   file_overwrite_matrix();
 }
 
+/**
+ * Calculator destructor
+ */
 Calculator::~Calculator() {
   for (auto [key, value] : _matrices) {
     // delete value;
   }
 }
 
+/**
+ * Creates a backup for the given file
+ * @return if success creating back up
+ */
 bool Calculator::file_create_backup() {
-  system(("cp " + _filename + " MatrixFileBackup.txt").c_str());
+  try
+  {
+    system(("cp " + _filename + " MatrixFileBackup.txt").c_str());
+  }
+  catch (std::system_error e) {
+    std::cerr << e.what() << std::endl;
+    return false;
+  }
+  catch (...) {
+    std::cerr << "something happened" << std::endl;
+  }
   return true;
 }
 
@@ -266,6 +292,10 @@ bool Calculator::file_overwrite_matrix() {
   return true;
 }
 
+/**
+ * parse user info
+ * @return parsed user info
+ */
 std::array<std::string, 4> Calculator::get_usr_cmd() {
   std::string user_input = "";
   std::cout << "Enter command: " << std::endl;
