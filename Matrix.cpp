@@ -1,3 +1,9 @@
+/**
+ * @file Matrix.h
+ * @brief Matrix file
+ *
+ * @author Levi Interian (linterianuc23@georgefox.edu) and Ethan Quirie (equirie24@georgefox.edu)
+ */
 #pragma once
 
 #include "Matrix.h"
@@ -6,6 +12,18 @@
 struct MatrixDimMismatchException : public std::runtime_error {
   MatrixDimMismatchException(const std::string &msg)
       : std::runtime_error(msg) {}
+};
+
+/**
+ * default constructor
+ */
+Matrix::Matrix() {
+  _rows = 2;
+  _cols = 2;
+  _data = new int *[_rows];
+  for (int x = 0; x < _rows; x++) {
+    _data[x] = new int[_cols];
+  }
 };
 
 /**
@@ -35,6 +53,11 @@ Matrix::~Matrix() {
   delete[] _data;
 }
 
+/**
+ * Addition operator
+ * @param other Matrix
+ * @return New matrix
+ */
 Matrix &Matrix::operator+(Matrix &other) {
   // dimension check
   if (_rows != other._rows || _cols != other._cols) {
@@ -62,6 +85,11 @@ Matrix &Matrix::operator+(Matrix &other) {
   return *matrixReturn;
 }
 
+/**
+  * addition compound assignment
+  * @param other Matrix
+  * @return Added matrix
+  */
 Matrix &Matrix::operator+=(Matrix &other) {
   // dimension check
   if (_rows != other._rows || _cols != other._cols) {
@@ -79,6 +107,11 @@ Matrix &Matrix::operator+=(Matrix &other) {
   return *this;
 }
 
+/**
+  * Subtraction operator
+  * @param other matrix
+  * @return new matrix
+  */
 Matrix &Matrix::operator-(Matrix &other) {
   // dimension check
   if (_rows != other._rows || _cols != other._cols) {
@@ -106,6 +139,11 @@ Matrix &Matrix::operator-(Matrix &other) {
   return *matrixReturn;
 }
 
+/**
+ * Subtraction compound operator
+ * @param other Matrix
+ * @return new matrix
+ */
 Matrix &Matrix::operator-=(Matrix &other) {
   // dimension check
   if (_rows != other._rows || _cols != other._cols) {
@@ -123,6 +161,11 @@ Matrix &Matrix::operator-=(Matrix &other) {
   return *this;
 }
 
+/**
+ * Multiplication operator
+ * @param other Matrix
+ * @return Matrix
+ */
 Matrix &Matrix::operator*(Matrix &other) {
   // dimension check
   if (_cols != other._rows || _rows != other._cols) {
@@ -160,6 +203,11 @@ Matrix &Matrix::operator*(Matrix &other) {
   return *matrixReturn;
 }
 
+/**
+ * Multiplication compound operator
+ * @param other Matrix
+ * @return New matrix
+ */
 Matrix &Matrix::operator*=(Matrix &other) {
   // dimension check
   if (_cols != other._rows || _rows != other._cols) {
@@ -216,6 +264,11 @@ int Matrix::getCols() { return _cols; }
  */
 int ***Matrix::getMatrixArray() { return &_data; }
 
+/**
+  *
+  * @param other Matrix to equal
+  * @return new matrix
+  */
 Matrix &Matrix::operator=(const Matrix &other) {
   if (this == &other)
     return *this;
@@ -237,6 +290,12 @@ Matrix &Matrix::operator=(const Matrix &other) {
   return *this;
 }
 
+/**
+ * Compare two operators
+ * @param lhs left matrix
+ * @param rhs right
+ * @return if equal
+ */
 bool operator==(const Matrix &lhs, const Matrix &rhs) {
   bool toReturn = true;
 
@@ -255,6 +314,12 @@ bool operator==(const Matrix &lhs, const Matrix &rhs) {
   return toReturn;
 }
 
+/**
+ * Left shift operator
+ * @param os outstream item
+ * @param matrix to output
+ * @return outstream output
+ */
 std::ostream &operator<<(std::ostream &os, const Matrix &matrix) {
   int cellWidth = 0;
 

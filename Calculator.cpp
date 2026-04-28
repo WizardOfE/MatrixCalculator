@@ -1,3 +1,10 @@
+/**
+ * @file Calculator.cpp
+ * @brief Calculator for processing matrix calculations
+ *
+ * @author Levi Interian (linterianuc23@georgefox.edu) and Ethan Quirie (equirie24@georgefox.edu)
+ */
+
 #pragma once
 
 #include "Calculator.h"
