@@ -1,5 +1,5 @@
 /**
- * @file Matrix.h
+ * @file Matrix.cpp
  * @brief Matrix file
  *
  * @author Levi Interian (linterianuc23@georgefox.edu) and Ethan Quirie (equirie24@georgefox.edu)
